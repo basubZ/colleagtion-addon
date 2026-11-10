@@ -722,6 +722,11 @@ class KK_OT_setup_file(bpy.types.Operator):
         scene.render.use_compositing = True
         # Post Processing: Sequencer выкл
         scene.render.use_sequencer = False
+        # Cycles: Fast GI Approximation выкл
+        try:
+            scene.cycles.use_fast_gi = False
+        except Exception:
+            pass
         scene.compositing_node_group = g
 
         # нода Render Layers должна смотреть на текущую сцену/вьюлеер

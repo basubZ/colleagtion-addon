@@ -10,7 +10,7 @@
 2. Edit → Preferences → **Get Extensions** → выпадающее меню справа сверху → **Repositories** → **+** → **Add Remote Repository**.
 3. URL:
    ```
-   https://basubz.github.io/colleagtion-addon/index.json
+   https://raw.githubusercontent.com/basubZ/colleagtion-addon/dist/index.json
    ```
    Включите **Check for Updates on Startup**.
 4. В списке Get Extensions найдите **Collegtion** → **Install**.
@@ -23,4 +23,4 @@ Blender сам проверяет обновления при запуске. К
 
 ## Для разработки
 
-Код — в `colleagtion/`. Чтобы выпустить новую версию, поднимите `version` в `colleagtion/blender_manifest.toml` и запушьте в `main`. GitHub Actions соберёт пакет и выложит его на GitHub Pages.
+Код — в `colleagtion/`. Чтобы выпустить новую версию, поднимите `version` в `colleagtion/blender_manifest.toml` и запушьте в `main`. GitHub Actions соберёт пакет и выложит его в ветку `dist`, откуда Blender берёт обновления.

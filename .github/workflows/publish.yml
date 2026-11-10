@@ -1,5 +1,9 @@
 name: Publish extension
 
+# Собирает пакет и index.json и кладёт их в ветку `dist`.
+# Blender берёт обновления отсюда:
+# https://raw.githubusercontent.com/basubZ/colleagtion-addon/dist/index.json
+
 on:
   push:
     branches: [main]
@@ -9,16 +13,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: publish
+  cancel-in-progress: false
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,21 +36,17 @@ jobs:
 
       - name: Build package and index.json
         run: |
-          mkdir -p _site
-          python blender_ext.py build --source-dir colleagtion --output-dir _site
-          python blender_ext.py server-generate --repo-dir _site --html
-          cat _site/index.json
+          mkdir -p _dist
+          python blender_ext.py build --source-dir colleagtion --output-dir _dist
+          python blender_ext.py server-generate --repo-dir _dist --html
+          cat _dist/index.json
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Push to dist branch
+        run: |
+          cd _dist
+          git init -q -b dist
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Publish ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" dist

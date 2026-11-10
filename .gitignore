@@ -1,0 +1,4 @@
+__pycache__/
+*.blend1
+_site/
+blender_ext.py

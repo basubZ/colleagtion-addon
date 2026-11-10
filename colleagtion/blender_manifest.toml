@@ -1,0 +1,22 @@
+schema_version = "1.0.0"
+
+id = "colleagtion"
+version = "1.3.0"
+name = "Collegtion"
+tagline = "Pipeline tools: compose, blur, lights, import, playblast"
+maintainer = "Basiubins Animation Corp"
+type = "add-on"
+
+website = "https://github.com/basubZ/colleagtion-addon"
+
+blender_version_min = "5.1.0"
+
+license = ["SPDX:GPL-2.0-or-later"]
+
+tags = ["Pipeline", "Compositing", "Animation"]
+
+[permissions]
+files = "Import from asset libraries, write playblasts"
+
+[build]
+paths_exclude_pattern = ["__pycache__/", "/.git/", "*.blend1"]

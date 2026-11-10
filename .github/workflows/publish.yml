@@ -1,0 +1,54 @@
+name: Publish extension
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "colleagtion/**"
+      - ".github/workflows/publish.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # официальный сборщик extensions из исходников Blender
+      - name: Get blender_ext.py
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/blender/blender/v5.1.0/scripts/addons_core/bl_pkg/cli/blender_ext.py -o blender_ext.py
+
+      - name: Build package and index.json
+        run: |
+          mkdir -p _site
+          python blender_ext.py build --source-dir colleagtion --output-dir _site
+          python blender_ext.py server-generate --repo-dir _site --html
+          cat _site/index.json
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

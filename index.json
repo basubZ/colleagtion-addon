@@ -1,0 +1,31 @@
+{
+  "version": "v1",
+  "blocklist": [],
+  "data": [
+    {
+      "schema_version": "1.0.0",
+      "id": "colleagtion",
+      "name": "Collegtion",
+      "tagline": "Pipeline tools: compose, blur, lights, import, playblast",
+      "version": "1.3.2",
+      "type": "add-on",
+      "maintainer": "Basiubins Animation Corp",
+      "license": [
+        "SPDX:GPL-2.0-or-later"
+      ],
+      "blender_version_min": "5.1.0",
+      "website": "https://github.com/basubZ/colleagtion-addon",
+      "permissions": {
+        "files": "Import from asset libraries, write playblasts"
+      },
+      "tags": [
+        "Pipeline",
+        "Compositing",
+        "Animation"
+      ],
+      "archive_url": "./colleagtion-1.3.2.zip",
+      "archive_size": 751276,
+      "archive_hash": "sha256:345600b3f2580d1ca4fbaa653e42ad905a59b34b4a00ccdef8d001449fc9ebd7"
+    }
+  ]
+}

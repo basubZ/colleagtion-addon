@@ -656,12 +656,33 @@ def _link_and_override(context, blend_path, coll_name, target_coll,
             except Exception:
                 pass
 
+    # Blender 5.3+: оверрайд создаётся только для коллекции, которая уже стоит
+    # в сцене (иначе override_hierarchy_create возвращает None). Временно
+    # вешаем линк в сцену, после оверрайда убираем.
+    temp_linked = False
+    if linked not in scene.collection.children.values():
+        try:
+            scene.collection.children.link(linked)
+            temp_linked = True
+        except Exception:
+            pass
+
     override = linked.override_hierarchy_create(scene, vl, do_fully_editable=True)
+
+    if temp_linked:
+        try:
+            scene.collection.children.unlink(linked)
+        except Exception:
+            pass
+    if override is None:
+        return None, "Не удалось создать library override для '%s'." % coll_name
     _make_hierarchy_editable(override)
 
-    # override автолинкуется в мастер-коллекцию сцены; выбираем keeper по имени
+    # keeper — именно созданный оверрайд (линкнутая коллекция с тем же
+    # именем могла остаться в сцене)
     new_master = [c for c in scene.collection.children if c.name not in before]
-    keeper = next((c for c in new_master if c.name == coll_name), None) or override
+    keeper = override if override.library is None else next(
+        (c for c in new_master if c.name == coll_name and c.library is None), override)
 
     # чистим лишние новые верхнеуровневые чайлды (дубликаты) — точечно,
     # без глобального orphans_purge, чтобы не задеть чужие оверрайды

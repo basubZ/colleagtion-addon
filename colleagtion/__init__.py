@@ -64,7 +64,7 @@ RENDER_SETTINGS = {
     "engine": "CYCLES",
     "device": "GPU",
     # Render
-    "samples": 216,
+    "samples": 256,
     "adaptive_threshold": 0.04,
     "adaptive_min_samples": 0,
     "time_limit": 0.0,
